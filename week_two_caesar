@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <cs50.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+// This program encyrpts plain text using Caesar's cipher (rotates each letter by a certain number of positions)
+
+// The user inputs a positive integer as a command-line argument to use as a key
+// Each character is then "rotated" by that number, with Z (or z) wrapping back round to A (or a)
+// Punctuation and digits stay unchanged
+
+int argument_count, key, ret;
+string argument_string, plain_text;
+
+int check_arguments(string arg_content, int arg_num);
+char encrypt(char plain_char, int key_int);
+
+// *********************************************************************************************************
+
+int main(int argc, string argv[])
+{
+    argument_count = argc;
+    argument_string = argv[1];
+
+    check_arguments(argument_string, argument_count);
+    if (ret == 1)
+        return 1;
+    // Makes sure there's only one command-line argument and that it only contains digits
+    // Ends program otherwise
+
+    key = atoi(argument_string);
+    //Converts the command-line argument from a string into an int
+
+    plain_text = get_string("plaintext:  ");
+    // Prompts user to input some plain text
+
+    /*
+    Uses encrypt function in a loop to encyrpt each character of the plain text
+    one by one and print the cipher text version until done
+    */
+    printf("ciphertext: ");
+
+    int char_num = 0;
+    int string_length = strlen(plain_text);
+
+    while (char_num < string_length)
+    {
+        encrypt(plain_text[char_num], key);
+        char_num++;
+    }
+    printf("\n");
+
+    return 0;
+}
+
+// **********************************************************************************************************
+
+int check_arguments(string arg_content, int arg_num)
+{
+    // Returns 1 if the number of command-line arguments is anything other than 2
+    if (arg_num != 2)
+    {
+        printf("Error: Please choose one positive integer as a cipher key.\n");
+        ret = 1;
+        return 1;
+    }
+    else
+    {
+        ret = 0;
+        return 0;
+    }
+
+    // Checks each character in the string and returns 1 if it finds something other than a digit
+    int char_num = 0, string_length = strlen(arg_content);
+
+    while (string_length > 0)
+    {
+       if (isdigit(argument_string[char_num]))
+       {
+            char_num++;
+            string_length--;
+       }
+       else
+       {
+            printf("Usage: ./caesar key\n");
+            ret = 1;
+            return 1;
+       }
+    }
+}
+
+char encrypt(char plain_char, int key_int)
+{
+    char cipher_char;
+
+    /*
+    "if" condition runs a loop 'key' amount of times, increments the character once per loop,
+    checks its value, and sets it back to 'a' or 'A' if it surpasses 'z' or 'Z'
+
+    "else" condition ignores punctuation, numbers, spaces
+    */
+
+    if (islower(plain_char) || isupper(plain_char))
+    {
+        for (int counter = 0; counter < key_int; counter++)
+        {
+            plain_char++;
+
+            if (plain_char == '{')
+                plain_char = 'a';
+            else if (plain_char == '[')
+                plain_char = 'A';
+        }
+        cipher_char = plain_char;
+    }
+    else
+        cipher_char = plain_char;
+
+    printf("%c", cipher_char);
+    return 0;
+}
