@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <cs50.h>
+
+int main(void)
+{
+
+    int sixteen_digits, fifteen_digits, thirteen_digits, first_pair;
+    long card_number;
+
+    for (int i = 0; i < 1;)
+    {
+        printf("Card number: ");
+        scanf("%li", &card_number);
+        int length = card_number / 1000000000000;
+
+        if ((length >= 1000 && length < 10000)
+        || (length >= 100 && length < 1000)
+        || (length >= 1 && length < 10))
+        {
+            i++;
+        }
+    }
+
+    long digit_finder = card_number;
+    int sum = 0;
+
+    while(digit_finder > 0)
+    {
+        int two_digits = digit_finder % 100;
+        // printf("Two digits: %i\n", two_digits);
+        first_pair = two_digits;
+        int target_digit = two_digits / 10;
+        // printf("Target digit = %i\n", target_digit);
+        int mul = target_digit * 2;
+        // printf("Multplied target digit: %i\n", mul);
+        if (mul >= 10)
+        {
+            int rem = mul % 10;
+            int div = mul / 10;
+            mul = div + rem;
+            // printf("Sum of the digits: %i\n", mul);
+        }
+        sum += mul;
+        // printf("Sum: %i\n", sum);
+
+        digit_finder = digit_finder / 100;
+    }
+
+    // printf("First pair: %i\n", first_pair);
+    digit_finder = card_number;
+    int sum_two = 0;
+
+    while(digit_finder > 0)
+    {
+        int two_digits = digit_finder % 100;
+        int target_digit = two_digits % 10;
+        // printf("Target digit = %i\n", target_digit);
+        sum_two += target_digit;
+        // printf("Sum two: %i\n", sum_two);
+
+        digit_finder = digit_finder / 100;
+    }
+
+    int sum_total = sum + sum_two;
+    // printf("Sum total: %i\n", sum_total);
+    int checker = sum_total % 10;
+
+    if (checker > 0)
+    {
+        printf("INVALID\n");
+    }
+    else if (((card_number / 10000000000000) == 37)
+    || ((card_number / 10000000000000) == 34))
+    {
+        printf("AMEX\n");
+    }
+    else if (((first_pair / 10) == 4) || ((first_pair == 4)))
+    {
+        printf("VISA\n");
+    }
+    else if ((first_pair >= 51) && (first_pair <= 55))
+    {
+        printf("MASTERCARD\n");
+    }
+    else
+    {
+        printf("INVALID\n");
+    }
+}
+
+// Mastercard: 5555555555554444
+// Visa: 4111111111111111
+// 13-digit Visa: 4012888818888
+// Amex: 378282246310005, 340000000000009
+// Sum ends in zero but not valid: 746378273647874
+// Invalid: 2747589374678
